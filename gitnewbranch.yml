@@ -1,0 +1,33 @@
+---
+ - hosts: localhost
+   vars:
+     repo: YOUR GIT REPO URL
+     oldbranch: OLD BRANCH
+     newbranch: NEW BRANCH
+     dest: GIT DIRECTORY IN LOCAL
+   tasks:
+      - name: Git clone
+        git:
+          repo: "{{ repo }}"
+          dest: "{{ dest }}"
+          #Pull latest
+          refspec: '+refs/pull/*:refs/heads/*'
+          #Checkout new branch
+          version: "{{ oldbranch }}"
+      - name: Git new branch
+        shell: git branch "{{ newbranch }}"
+        args:
+          chdir: "{{ dest }}"
+      - name: git checkout new branch
+        git:
+          repo: "{{ repo }}"
+          dest: "{{ dest }}"
+          version: testnirvik
+      - name: git push
+        shell: git push origin "{{ newbranch }}"
+        args:
+          chdir: "{{ dest }}"
+      - name: Delete a directory
+        file:
+          state: absent
+          path: "{{ dest }}"
