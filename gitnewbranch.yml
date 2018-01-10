@@ -12,7 +12,7 @@
           dest: "{{ dest }}"
           #Pull latest
           refspec: '+refs/pull/*:refs/heads/*'
-          #Checkout new branch
+          #Checkout old branch
           version: "{{ oldbranch }}"
       - name: Git new branch
         shell: git branch "{{ newbranch }}"
@@ -22,7 +22,7 @@
         git:
           repo: "{{ repo }}"
           dest: "{{ dest }}"
-          version: testnirvik
+          version: "{{ newbranch }}"
       - name: git push
         shell: git push origin "{{ newbranch }}"
         args:
