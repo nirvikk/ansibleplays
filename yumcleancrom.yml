@@ -1,0 +1,11 @@
+---
+ - hosts: HOSTNAMES
+   user: root
+   tasks:
+     - name: CRONJOB NAME
+     #Here I have set a cronjob to clear yum cache on different servers
+       cron: 
+         minute: "15"
+         hour: "22"
+         name: "Clear yum cache"
+         job: "yum clean all"
