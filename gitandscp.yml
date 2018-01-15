@@ -1,0 +1,19 @@
+---
+ - hosts: localhost
+   vars:
+     repo: YOUR REPO
+     branch: YOUR BRANCH
+   tasks:
+      - name: Git clone
+        git:
+          repo: "{{ repo }}"
+          dest: /ephemeral/nirvik/
+          #Pull latest
+          refspec: '+refs/pull/*:refs/heads/*'
+          #Checkout new branch
+          version: "{{ branch }}"
+ - hosts: SOME HOSTS INVENTORY
+ # Here you send files to multiple servers 
+   tasks:
+      - name: SCP
+        copy: SOURCE dest= DESTINATION
