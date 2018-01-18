@@ -1,0 +1,16 @@
+---
+ - hosts: localhost
+   vars:
+     destpath: DESTINATION PATH followed by filename and .zip
+   tasks:
+     - archive:
+        path:
+            - PATH 1
+            - PATH 2
+            - PATH 3
+            - PATH 4
+            - PATH 5
+            - PATH 6
+            - PATH 7
+      dest: "{{ destpath }}"
+      format: zip
