@@ -19,10 +19,9 @@
         args:
           chdir: "{{ dest }}"
       - name: git checkout new branch
-        git:
-          repo: "{{ repo }}"
-          dest: "{{ dest }}"
-          version: "{{ newbranch }}"
+        shell: git checkout "{{ newbranch }}"
+        args:
+          chdir: /ephemeral/nirvikgitclone/
       - name: git push
         shell: git push origin "{{ newbranch }}"
         args:
