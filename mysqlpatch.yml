@@ -1,22 +1,21 @@
 ---
  - hosts: localhost
    vars:
-     repo:
-     branch:
+     repo: GIT REPO
+     branch: YOUR BRANCH NAME
      login_host: YOUR LOGIN HOST
      login_password: YOUR PASSWORD
      login_user: YOUR USERNAME
-     patchfile: PATCH FILE SQL
      database: DATABASE NAME
    tasks:
-      - name: Git clone
-        git:
-          repo: "{{ repo }}"
-          dest: /ephemeral/nirvikmysql/
+     - name: Git clone
+       git:
+         repo: "{{ repo }}"
+         dest: /workspace/nirvikmysql/
          #Pull latest
-          refspec: '+refs/pull/*:refs/heads/*'
+         refspec: '+refs/pull/*:refs/heads/*'
           #Checkout new branch
-          version: "{{ branch }}"
+         version: "{{ branch }}"
      - name: Import file.sql similar to mysql -h <HOSTNAME> -u <username> -p <password> < patchfile.sql
        mysql_db:
          login_host: "{{ login_host }}"
@@ -24,4 +23,7 @@
          login_user: "{{ login_user }}"
          state: import
          name: "{{ database }}"
-         target: /ephemeral/nirvikmysql/{{ patchfile }}
+         target: "{{ item.target }}"
+       with_items:
+         - { target: '/workspace/nirvikmysql/patch1.sql'}
+         - { target: '/workspace/nirvikmysql/patch2.sql'}
