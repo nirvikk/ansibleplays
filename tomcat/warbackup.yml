@@ -1,0 +1,12 @@
+---
+ - hosts: HOSTNAME
+   user: root
+   vars:
+     platform: PLATFORMNAME
+     product: PRODUCTNAME
+   tasks:
+     - name: Backup war from succeding host
+       copy:
+         src: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT.war
+         dest: /data/backup/tomcat/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         remote_src: yes

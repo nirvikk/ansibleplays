@@ -1,0 +1,49 @@
+---
+ - hosts: HOSTNAME
+   user: root
+   vars:
+     platform: PLATFORMNAME
+     product: PRODUCTNAME
+   tasks:
+     - name: Fetch files from preceding host
+       fetch:
+         src: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT.war
+         dest: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         flat: yes
+ - hosts: HOSTNAME
+   user: root
+   vars:
+     platform: PLATFORMNAME
+     product: PRODUCTNAME
+   tasks:
+     - name: SCP from middle server to succeding host /tmp
+       copy:
+         src: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         dest: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+     - name: Delete existing war file from succeding host
+       file:
+         path: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT.war
+         state: absent
+     - name: Delete existing ROOT folder from succeding host
+       file:
+         path: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT/
+         state: absent
+     - name: Place the war file from /tmp to webapps
+       copy:
+         src: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         dest: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT.war
+         remote_src: yes
+     - name: Delete file from /tmp directory of succeding host
+       file:
+         path: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         state: absent 
+ - hosts: localhost
+   user: root
+   vars:
+     platform: PLATFORMNAME
+     product: PRODUCTNAME
+   tasks:
+     - name: Delete file from /tmp directory of localhost
+       file:
+         path: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         state: absent

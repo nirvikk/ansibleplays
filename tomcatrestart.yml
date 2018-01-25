@@ -1,0 +1,3 @@
+---
+ - hosts: cmqc1
+   user: root

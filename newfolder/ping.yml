@@ -1,6 +1,0 @@
----
- - hosts: HOSTS FROM HOSTFILE
-   user: root
-   tasks:
-     - name: Ping your hosts
-       ping:

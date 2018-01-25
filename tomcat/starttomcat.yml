@@ -1,0 +1,15 @@
+---
+ - hosts: HOSTNAME
+   user: root
+   vars:
+     product: PRODUCTNAME
+     platform: PLATFORMNAME
+
+   tasks:
+     - name: start tomcat
+       shell: setsid /bin/sh -i -c "/usr/share/tomcat/{{product}}/{{platform}}/bin/startup.sh"
+     - name: view logs
+       wait_for:
+         path: /usr/share/tomcat/{{ product }}/{{ platform }}/logs/catalina.out
+         search_regex: '!!! Build Success !!!'
+         msg: Build successful

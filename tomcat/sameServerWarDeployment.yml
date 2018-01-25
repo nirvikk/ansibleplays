@@ -1,0 +1,21 @@
+---
+ - hosts: HOSTNAME
+   user: root
+   vars:
+     platform: PLATFORMNAME
+     product: PRODUCTNAME
+     oldplatform: OLDPLATFORMNAME
+   tasks:
+     - name: Delete ROOT directory of webapps
+       file:
+         path: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT/
+         state: absent
+     - name: Delete the war file from destination
+       file:
+         path: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT.war
+         state: absent
+     - name: Copy war from another platform
+       copy:
+         src: /usr/share/tomcat/{{ product }}/{{ oldplatform }}/webapps/ROOT.war
+         dest: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/
+         remote_src: yes
