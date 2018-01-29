@@ -1,0 +1,18 @@
+---
+ - hosts: localhost
+   vars:
+     loginhost:   NAME OF DB HOST
+     loginuser: USERNAME
+     loginpw: PASSWORD
+     database: DATABASE NAME
+     product: PRODUCTNAME
+     platform: PLATFORMNAME
+   tasks:
+     - name: Take mysqldump
+       mysqldump:
+         login_host: "{{ login_host }}"
+         login_password: "{{ login_password }}"
+         login_user: "{{ login_user }}"
+         state: dump
+         name: "{{ database }}"
+         target: /PATH/TO/DUMP/{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.sql
