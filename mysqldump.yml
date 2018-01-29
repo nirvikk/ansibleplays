@@ -9,10 +9,10 @@
      platform: PLATFORMNAME
    tasks:
      - name: Take mysqldump
-       mysqldump:
-         login_host: "{{ login_host }}"
-         login_password: "{{ login_password }}"
-         login_user: "{{ login_user }}"
+       mysql_db:
+         login_host: "{{ loginhost }}"
+         login_password: "{{ loginpw }}"
+         login_user: "{{ loginuser }}"
          state: dump
          name: "{{ database }}"
          target: /PATH/TO/DUMP/{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.sql
