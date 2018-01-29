@@ -1,49 +1,58 @@
 ---
+#Go to old platform to fetch the war that has to be deployed to new platform
  - hosts: HOSTNAME
    user: root
    vars:
-     platform: PLATFORMNAME
-     product: PRODUCTNAME
+     oldplatform: qc
+     product: PRODUCT
+     appname: ROOT
+     version: 100
    tasks:
      - name: Fetch files from preceding host
        fetch:
-         src: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT.war
-         dest: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         src: /usr/share/tomcat/{{ product }}/{{ oldplatform }}/{{ version }}/webapps/{{ appname }}.war
+         dest: /tmp/{{ appname }}_{{ product }}_{{ oldplatform }}_{{ version }}_{{ ansible_date_time.date }}.war
          flat: yes
+# Push the war file from build server to new platform
  - hosts: HOSTNAME
    user: root
    vars:
-     platform: PLATFORMNAME
-     product: PRODUCTNAME
+     newplatform: production
+     product: PRODUCT
+     oldplatform: qc
+     appname: ROOT
+     version: 100
    tasks:
      - name: SCP from middle server to succeding host /tmp
        copy:
-         src: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
-         dest: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         src: /tmp/{{ appname }}_{{ product }}_{{ oldplatform }}_{{ version }}_{{ ansible_date_time.date }}.war
+         dest: /tmp/{{ appname }}_{{ product }}_{{ oldplatform }}_{{ version }}_{{ ansible_date_time.date }}.war
      - name: Delete existing war file from succeding host
        file:
-         path: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT.war
+         path: /usr/share/tomcat/{{ product }}/{{ newplatform }}/{{ version }}/webapps/{{ appname }}.war
          state: absent
      - name: Delete existing ROOT folder from succeding host
        file:
-         path: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT/
+         path: /usr/share/tomcat/{{ product }}/{{ newplatform }}/{{ version }}/webapps/{{ appname}}/
          state: absent
      - name: Place the war file from /tmp to webapps
        copy:
-         src: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
-         dest: /usr/share/tomcat/{{ product }}/{{ platform }}/webapps/ROOT.war
+         src: /tmp/{{ appname }}_{{ product }}_{{ oldplatform }}_{{ version }}_{{ ansible_date_time.date }}.war
+         dest: /usr/share/tomcat/{{ product }}/{{ newplatform }}/{{ version }}/webapps/{{ appname }}.war
          remote_src: yes
      - name: Delete file from /tmp directory of succeding host
        file:
-         path: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         path: /tmp/{{ appname }}_{{ product }}_{{ oldplatform }}_{{ version }}_{{ ansible_date_time.date }}.war
          state: absent 
  - hosts: localhost
    user: root
    vars:
-     platform: PLATFORMNAME
+     oldplatform: PLATFORMNAME
      product: PRODUCTNAME
+     appname: ROOT
+     version: 100
    tasks:
      - name: Delete file from /tmp directory of localhost
        file:
-         path: /tmp/ROOT_{{ product }}_{{ platform }}_{{ ansible_date_time.date }}.war
+         path: /tmp/{{ appname }}_{{ product }}_{{ oldplatform }_{{ version }}_{{ ansible_date_time.date }}.war
          state: absent
