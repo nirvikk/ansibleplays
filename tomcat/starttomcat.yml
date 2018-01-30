@@ -1,6 +1,7 @@
 ---
  - hosts: HOSTNAME
-   user: root
+   become: true
+   become_user: tomcat
    vars:
      product: PRODUCTNAME
      platform: PLATFORMNAME
