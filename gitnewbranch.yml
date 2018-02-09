@@ -1,10 +1,15 @@
 ---
  - hosts: localhost
-   vars:
-     repo: YOUR GIT REPO URL
-     oldbranch: OLD BRANCH
-     newbranch: NEW BRANCH
-     dest: GIT DIRECTORY IN LOCAL
+   vars_prompt:
+     - name: "repo"
+       prompt: "Name of the git repository?"
+       private: no
+     - name: "oldbranch"
+       prompt: "Old branch name?"
+       private: no
+     - name: "newbranch"
+       prompt: "New branch name?"
+       private: no
    tasks:
       - name: Git clone
         git:
@@ -29,4 +34,4 @@
       - name: Delete a directory
         file:
           state: absent
-          path: "{{ dest }}"
+          path: "{{ dest }}"  
